@@ -1,0 +1,22 @@
+allOf:
+  - $ref: '#/components/schemas/ServiceKey'
+  - type: object
+    required:
+      - attributes
+    properties:
+      attributes:
+        type: object
+        required:
+          - url
+          - port
+          - name
+        properties:
+          url:
+            type: string
+            example: 'http://example-service'
+          port:
+            type: string
+            example: 80
+          name:
+            type: string
+            example: example-service

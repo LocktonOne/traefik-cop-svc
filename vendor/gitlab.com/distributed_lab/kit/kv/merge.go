@@ -22,7 +22,7 @@ func (g getter) GetStringMap(key string) (map[string]interface{}, error) {
 		value, err := backend.GetStringMap(key)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to get key", logan.F{
-				"backend": fmt.Sprint("%T", backend),
+				"backend": fmt.Sprintf("%T", backend),
 			})
 		}
 		if value != nil {

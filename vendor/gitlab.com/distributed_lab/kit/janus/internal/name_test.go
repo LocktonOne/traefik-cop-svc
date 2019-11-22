@@ -55,4 +55,11 @@ func TestGetName(t *testing.T) {
 		name := GetName(endpoint, method)
 		assert.Equal(t, "get-users-x-another-x", name)
 	})
+
+	t.Run("few parameters", func(t *testing.T) {
+		endpoint := "/order_books/{base}:{quote}:{order_book_id}/something"
+		method := "GET"
+		name := GetName(endpoint, method)
+		assert.Equal(t, "get-order-books-x-x-x-something", name)
+	})
 }

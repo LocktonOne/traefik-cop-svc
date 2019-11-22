@@ -69,17 +69,6 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:4611e727460d3634059cbe6e0a4799aaeb426ef8150e3b26056c83e1106831c4"
-  name = "github.com/jmoiron/sqlx"
-  packages = [
-    ".",
-    "reflectx",
-  ]
-  pruneopts = ""
-  revision = "d161d7a76b5661016ad0b085869f77fd410f3e6a"
-  version = "v1.2.0"
-
-[[projects]]
   digest = "1:0f51cee70b0d254dbc93c22666ea2abf211af81c1701a96d04e2284b408621db"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -88,48 +77,12 @@
   version = "v1.0.2"
 
 [[projects]]
-  branch = "master"
-  digest = "1:0fe2dd9762093b9d72e4c9eeb4f0832fb6582428cee2c62b074e1c9aa68564d8"
-  name = "github.com/lann/builder"
-  packages = ["."]
-  pruneopts = ""
-  revision = "47ae307949d02aa1f1069fdafc00ca08e1dbabac"
-
-[[projects]]
-  branch = "master"
-  digest = "1:bfb195bbfe4edff0d8a078dd59d7567aae6f3c0d1a2cdf855fdcdd23c9b3bd8d"
-  name = "github.com/lann/ps"
-  packages = ["."]
-  pruneopts = ""
-  revision = "62de8c46ede02a7675c4c79c84883eb164cb71e3"
-
-[[projects]]
-  digest = "1:f4216047c24ab66fb757045febd7dac4edc6f4ad9f6c0063d0755d654d04f25e"
-  name = "github.com/lib/pq"
-  packages = [
-    ".",
-    "oid",
-    "scram",
-  ]
-  pruneopts = ""
-  revision = "3427c32cb71afc948325f299f040e53c1dd78979"
-  version = "v1.2.0"
-
-[[projects]]
   digest = "1:ae39921edb7f801f7ce1b6b5484f9715a1dd2b52cb645daef095cd10fd6ee774"
   name = "github.com/magiconair/properties"
   packages = ["."]
   pruneopts = ""
   revision = "de8848e004dd33dc07a2947b3d76f618a7fc7ef1"
   version = "v1.8.1"
-
-[[projects]]
-  digest = "1:eccd869de771cf2a53cd564b2e163be6f46d789a898d7576f7982b6d5e61f840"
-  name = "github.com/masterminds/squirrel"
-  packages = ["."]
-  pruneopts = ""
-  revision = "fa735ea14f09f8685fcf5e75db091feb5a410730"
-  version = "v1.1"
 
 [[projects]]
   digest = "1:bcc46a0fbd9e933087bef394871256b5c60269575bb661935874729c65bbbf60"
@@ -247,18 +200,17 @@
   version = "v2.1.0"
 
 [[projects]]
-  digest = "1:fb75d2fde00eac499cd1fd430d6e526c61ea4e2e796c70001560d2ef0dc2cacd"
+  branch = "feature/traefik"
+  digest = "1:9d17f252052cfc2bd4cbf76af743b8d571bd051861fb9f5f35edeb96d8afd6f8"
   name = "gitlab.com/distributed_lab/kit"
   packages = [
     "comfig",
-    "janus",
-    "janus/internal",
     "kv",
-    "pgdb",
+    "traefik",
+    "traefik/internal",
   ]
   pruneopts = ""
-  revision = "312d0d0f1014682a2c55c46683a7af80d2b09623"
-  version = "0.3.0"
+  revision = "a26b4c54a9990d2f6cf6284feed222366396a4ed"
 
 [[projects]]
   digest = "1:ca37a1773c5b1e04dd4da7f3d3753eac72dc11f3fda9a6ef2dc446857f4f0578"
@@ -310,6 +262,7 @@
     "github.com/urfave/cli",
     "gitlab.com/distributed_lab/kit/comfig",
     "gitlab.com/distributed_lab/kit/kv",
+    "gitlab.com/distributed_lab/kit/traefik",
     "gitlab.com/distributed_lab/logan/v3",
     "gitlab.com/distributed_lab/logan/v3/errors",
   ]

@@ -17,6 +17,7 @@ func GetName(endpoint, method string) string {
 	t := endpoint[1:]
 	r := regexp.MustCompile(`{([a-z\s-_]+)}`)
 	t = r.ReplaceAllString(t, "x")
+	t = strings.Replace(t, ":", "-", -1)
 	t = strings.Replace(t, "/", "-", -1)
 	t = strings.Replace(t, "_", "-", -1)
 

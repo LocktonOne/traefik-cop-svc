@@ -1,9 +1,12 @@
 package pgdb
 
 import (
+	"context"
+	"database/sql"
+
+	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/masterminds/squirrel"
 	"github.com/pkg/errors"
 )
 
@@ -18,6 +21,9 @@ func Open(opts Opts) (*DB, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to connect to database")
 	}
+
+	db.SetMaxIdleConns(opts.MaxIdleConnections)
+	db.SetMaxOpenConns(opts.MaxOpenConnections)
 	return &DB{
 		db:      db,
 		Queryer: newQueryer(db),
@@ -26,17 +32,25 @@ func Open(opts Opts) (*DB, error) {
 
 type Execer interface {
 	Exec(query squirrel.Sqlizer) error
+	ExecContext(ctx context.Context, query squirrel.Sqlizer) error
 	ExecRaw(query string, args ...interface{}) error
+	ExecRawContext(ctx context.Context, query string, args ...interface{}) error
+	ExecWithResult(query squirrel.Sqlizer) (sql.Result, error)
+	ExecWithResultContext(ctx context.Context, query squirrel.Sqlizer) (sql.Result, error)
 }
 
 type Selecter interface {
 	Select(dest interface{}, query squirrel.Sqlizer) error
+	SelectContext(ctx context.Context, dest interface{}, query squirrel.Sqlizer) error
 	SelectRaw(dest interface{}, query string, args ...interface{}) error
+	SelectRawContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 }
 
 type Getter interface {
 	Get(dest interface{}, query squirrel.Sqlizer) error
+	GetContext(ctx context.Context, dest interface{}, query squirrel.Sqlizer) error
 	GetRaw(dest interface{}, query string, args ...interface{}) error
+	GetRawContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 }
 
 type TransactionFunc func() error

@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 	"gitlab.com/distributed_lab/figure"
-
 	"gitlab.com/distributed_lab/kit/kv"
 )
 

@@ -29,7 +29,7 @@
 
 [[constraint]]
   name = "gitlab.com/distributed_lab/kit"
-  version = "0.3.0"
+  branch = "feature/traefik"
 
 [[constraint]]
   name = "gitlab.com/distributed_lab/logan"

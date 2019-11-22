@@ -1,3 +1,7 @@
 log:
   disable_sentry: true
 
+traefik:
+  endpoint: http://
+  service_name: traefik-cop
+  service_port: 80
