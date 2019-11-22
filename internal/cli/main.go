@@ -1,11 +1,13 @@
 package cli
 
 import (
+	"context"
 	"github.com/urfave/cli"
 	"gitlab.com/distributed_lab/kit/kv"
 	"gitlab.com/distributed_lab/logan/v3"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 	"gitlab.com/tokend/traefik-cop/internal/config"
+	"gitlab.com/tokend/traefik-cop/internal/service"
 )
 
 func Run(args []string) bool {
@@ -35,7 +37,10 @@ func Run(args []string) bool {
 			Name:   "run",
 			Before: before,
 			Action: func(_ *cli.Context) error {
-				return errors.New("Not implemented")
+				ctx := context.Background()
+				s := service.NewService(cfg)
+				s.Run(ctx)
+				return errors.New("dns-service died")
 			},
 		},
 	}

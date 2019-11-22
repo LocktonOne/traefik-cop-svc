@@ -2,16 +2,16 @@ package service
 
 import (
 	"github.com/go-chi/chi"
-	"gitlab.com/tokend/traefik-cop/internal/config"
 	"net/http"
+	"gitlab.com/distributed_lab/ape"
 )
 
-func Router(s *Service, cfg config.Config) chi.Router {
+func (s *Service) router() chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(
-		ape.RecoverMiddleware(cfg.Log()),
-		ape.LoganMiddleware(cfg.Log()),
+		ape.RecoverMiddleware(s.config.Log()),
+		ape.LoganMiddleware(s.config.Log()),
 		ape.CtxMiddleWare(),
 	)
 

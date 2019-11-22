@@ -34,20 +34,39 @@
   version = "v1.4.7"
 
 [[projects]]
-  digest = "1:40548207236a3c3d02b4dae094f5901d662a792e015948287dc3e9ea1bd50674"
+  branch = "master"
+  digest = "1:45b888a04b59bfebec41c3daf520239a27466ff2ae2288c8fd557de8b6fe0063"
   name = "github.com/getsentry/raven-go"
   packages = ["."]
   pruneopts = ""
-  revision = "f04e7487e9a6b9d9837d52743fb5f40576c56411"
-  version = "v0.2.0"
+  revision = "5c24d5110e0e198d9ae16f1f3465366085001d92"
 
 [[projects]]
   digest = "1:55d7786e315a68ad27227a9800ebed9c48a23379de13358ab9a331ae8fe39283"
   name = "github.com/go-chi/chi"
-  packages = ["."]
+  packages = [
+    ".",
+    "middleware",
+  ]
   pruneopts = ""
   revision = "da24bba8dcd4021cafac38724bf10dccc97c3e36"
   version = "v4.0.2"
+
+[[projects]]
+  digest = "1:eda43e0069a6e6b841ed5688112e875373e74087fe0d658d5380a5416ce4eec4"
+  name = "github.com/go-ozzo/ozzo-validation"
+  packages = ["."]
+  pruneopts = ""
+  revision = "199b55b36bc1af151e6eea487cc92ffa5b460b81"
+  version = "v3.6.0"
+
+[[projects]]
+  digest = "1:ec6c80b25440f994fd5d8c3b8d6593543134e967b56ad52e0dda88e13515a49d"
+  name = "github.com/google/jsonapi"
+  packages = ["."]
+  pruneopts = ""
+  revision = "46d3ced0434461be12e555852e2f1a9ed382e139"
+  version = "1.0.0"
 
 [[projects]]
   digest = "1:d14365c51dd1d34d5c79833ec91413bfbb166be978724f15701e17080dc06dec"
@@ -109,20 +128,12 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:87dffed114a34c714199c74e15c04ecb1c332c669f63f722220a5e4e6eb2ef52"
+  digest = "1:2761e287c811d0948d47d0252b82281eca3801eb3c9d5f9530956643d5b9f430"
   name = "github.com/russross/blackfriday"
   packages = ["."]
   pruneopts = ""
-  revision = "d3b5b032dc8e8927d31a5071b56e14c89f045135"
-  version = "v2.0.1"
-
-[[projects]]
-  digest = "1:42a59e0ee70c485f96de4a30f86f88266d50b50f918053dec798f0cb2b4b7a88"
-  name = "github.com/shurcooL/sanitized_anchor_name"
-  packages = ["."]
-  pruneopts = ""
-  revision = "7bfe4c7ecddb3666a94b053b422cdd8f5aaa3615"
-  version = "v1.0.0"
+  revision = "05f3235734ad95d0016f6a23902f06461fcf567a"
+  version = "v1.5.2"
 
 [[projects]]
   digest = "1:1a405cddcf3368445051fb70ab465ae99da56ad7be8d8ca7fc52159d1c2d873c"
@@ -192,6 +203,17 @@
   version = "v1.22.0"
 
 [[projects]]
+  digest = "1:7c851aca3e79c3dd65a10c3ac94f9ef4f3729a0622286e58fecf441c5729893d"
+  name = "gitlab.com/distributed_lab/ape"
+  packages = [
+    ".",
+    "problems",
+  ]
+  pruneopts = ""
+  revision = "fde2c46f0922f7a427b95651addba7fd781bd7f2"
+  version = "v1.2.0"
+
+[[projects]]
   digest = "1:141e2fa2e4b582642a676bdc5d5714cad71f46e8c731d4bfc18b678345c9e987"
   name = "gitlab.com/distributed_lab/figure"
   packages = ["."]
@@ -223,6 +245,14 @@
   pruneopts = ""
   revision = "276f103dea6704f4535335a139604a7756a2b39b"
   version = "v3.7.2"
+
+[[projects]]
+  digest = "1:23c7b96d029b140fb577e688b6094e8091ea8c17f7fcf0fd038ca7697876c08a"
+  name = "gitlab.com/tokend/go"
+  packages = ["amount"]
+  pruneopts = ""
+  revision = "921363d13fceb1dfb3a9a913b4d092cf5ca64c13"
+  version = "v3.11.0"
 
 [[projects]]
   branch = "master"
@@ -259,12 +289,15 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/go-chi/chi",
     "github.com/urfave/cli",
+    "gitlab.com/distributed_lab/ape",
     "gitlab.com/distributed_lab/kit/comfig",
     "gitlab.com/distributed_lab/kit/kv",
     "gitlab.com/distributed_lab/kit/traefik",
     "gitlab.com/distributed_lab/logan/v3",
     "gitlab.com/distributed_lab/logan/v3/errors",
+    "gitlab.com/tokend/go/amount",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

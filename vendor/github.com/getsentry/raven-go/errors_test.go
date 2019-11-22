@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
-
-	pkgErrors "github.com/pkg/errors"
 )
 
 func TestWrapWithExtraGeneratesProperErrWithExtra(t *testing.T) {
@@ -47,7 +45,7 @@ func TestWrapWithExtraGeneratesProperErrWithExtra(t *testing.T) {
 func TestWrapWithExtraGeneratesCausableError(t *testing.T) {
 	baseErr := fmt.Errorf("this is bad")
 	testErr := WrapWithExtra(baseErr, nil)
-	cause := pkgErrors.Cause(testErr)
+	cause := Cause(testErr)
 
 	if !reflect.DeepEqual(cause, baseErr) {
 		t.Errorf("Failed to unwrap error, got %+v, expected %+v", cause, baseErr)
@@ -103,7 +101,7 @@ func TestExtractErrorPullsExtraData(t *testing.T) {
 				"outer": "456",
 			},
 		},
-		// Futher wrapping of errors shouldn't allow for value override
+		// Further wrapping of errors shouldn't allow for value override
 		{
 			Error: WrapWithExtra(
 				WrapWithExtra(fmt.Errorf("This is bad"),
@@ -140,5 +138,28 @@ func TestExtractErrorPullsExtraData(t *testing.T) {
 				t.Errorf("Case [%d]: Wrong extra data for %q. Got: %+v, expected: %+v", i, expectedKey, val, expectedVal)
 			}
 		}
+	}
+}
+
+type errorWithJustExtra struct{}
+
+func (e *errorWithJustExtra) Error() string {
+	return "oops"
+}
+func (e *errorWithJustExtra) ExtraInfo() Extra {
+	return Extra{"foo": "bar"}
+}
+
+func TestExtractExtraDoesNotRequireCause(t *testing.T) {
+	extra := extractExtra(&errorWithJustExtra{})
+	if extra["foo"] != "bar" {
+		t.Error("Could not extract extra without cause")
+	}
+}
+
+func TestErrWrappedWithExtraWithNilError(t *testing.T) {
+	ewx := WrapWithExtra(nil, map[string]interface{}{})
+	if errString := ewx.Error(); errString != "" {
+		t.Errorf("Expected empty string got %s", errString)
 	}
 }
