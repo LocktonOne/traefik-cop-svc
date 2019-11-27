@@ -223,16 +223,15 @@
 
 [[projects]]
   branch = "feature/traefik"
-  digest = "1:9d17f252052cfc2bd4cbf76af743b8d571bd051861fb9f5f35edeb96d8afd6f8"
+  digest = "1:5542953ce4dab5b3ac7634fd0e89a861e93233916c89654e37c0ca44befc624b"
   name = "gitlab.com/distributed_lab/kit"
   packages = [
     "comfig",
     "kv",
     "traefik",
-    "traefik/internal",
   ]
   pruneopts = ""
-  revision = "a26b4c54a9990d2f6cf6284feed222366396a4ed"
+  revision = "46abec03fc86f9d51831c192fad7b5a6e48cf32b"
 
 [[projects]]
   digest = "1:ca37a1773c5b1e04dd4da7f3d3753eac72dc11f3fda9a6ef2dc446857f4f0578"

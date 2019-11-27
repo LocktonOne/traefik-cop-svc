@@ -9,11 +9,13 @@ import (
 type Config interface {
 	traefik.Traefiker
 	comfig.Logger
+	comfig.Listenerer
 }
 
 type config struct {
 	traefik.Traefiker
 	comfig.Logger
+	comfig.Listenerer
 	getter kv.Getter
 }
 
@@ -22,6 +24,6 @@ func NewConfig(getter kv.Getter) Config {
 		getter:     getter,
 		Logger:     comfig.NewLogger(getter, comfig.LoggerOpts{Release: "unverified"}),
 		Traefiker:  traefik.NewTraefiker(getter),
+		Listenerer: comfig.NewListenerer(getter),
 	}
 }
-

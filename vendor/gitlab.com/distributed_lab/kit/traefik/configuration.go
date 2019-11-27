@@ -1,4 +1,4 @@
-package internal
+package traefik
 
 type Configuration struct {
 	HTTP *HTTPConfiguration `json:"http,omitempty"`

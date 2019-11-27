@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/go-chi/chi"
-	"net/http"
 	"gitlab.com/distributed_lab/ape"
+	"gitlab.com/tokend/traefik-cop/internal/service/handlers"
 )
 
 func (s *Service) router() chi.Router {
@@ -12,16 +12,14 @@ func (s *Service) router() chi.Router {
 	r.Use(
 		ape.RecoverMiddleware(s.config.Log()),
 		ape.LoganMiddleware(s.config.Log()),
-		ape.CtxMiddleWare(),
+		ape.CtxMiddleware(
+			handlers.CtxLog(s.log),
+			handlers.CtxUpdater(s.updater)),
 	)
 
 	r.Route("/integrations/traefik", func(r chi.Router) {
-		r.Post("/services", s.addService)
+		r.Post("/services", handlers.AddService)
 	})
 
 	return r
-}
-
-func (s *Service) addService(w http.ResponseWriter, r *http.Request) {
-
 }
