@@ -34,6 +34,7 @@ func NewService(cfg config.Config) *Service {
 		log:      cfg.Log(),
 		listener: cfg.Listener(),
 		traefik:  cfg.Traefik(),
+		backends: make(map[string]traefik2.Backend),
 	}
 }
 

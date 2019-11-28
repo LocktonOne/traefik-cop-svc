@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+
 	"github.com/urfave/cli"
 	"gitlab.com/distributed_lab/kit/kv"
 	"gitlab.com/distributed_lab/logan/v3"
@@ -40,7 +41,7 @@ func Run(args []string) bool {
 				ctx := context.Background()
 				s := service.NewService(cfg)
 				s.Run(ctx)
-				return errors.New("dns-service died")
+				return errors.New("cop-service died")
 			},
 		},
 	}
