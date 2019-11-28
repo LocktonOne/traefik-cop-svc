@@ -223,15 +223,14 @@
 
 [[projects]]
   branch = "feature/traefik"
-  digest = "1:5542953ce4dab5b3ac7634fd0e89a861e93233916c89654e37c0ca44befc624b"
+  digest = "1:ee4fb8442a77c50b178729123b4a1f2ed80246337a54e4a1584e933eb69c2faf"
   name = "gitlab.com/distributed_lab/kit"
   packages = [
     "comfig",
     "kv",
-    "traefik",
   ]
   pruneopts = ""
-  revision = "46abec03fc86f9d51831c192fad7b5a6e48cf32b"
+  revision = "4aba247aa3cbcf791ce536b769c88b2347529d8a"
 
 [[projects]]
   digest = "1:ca37a1773c5b1e04dd4da7f3d3753eac72dc11f3fda9a6ef2dc446857f4f0578"
@@ -289,11 +288,13 @@
   analyzer-version = 1
   input-imports = [
     "github.com/go-chi/chi",
+    "github.com/pkg/errors",
     "github.com/urfave/cli",
     "gitlab.com/distributed_lab/ape",
+    "gitlab.com/distributed_lab/ape/problems",
+    "gitlab.com/distributed_lab/figure",
     "gitlab.com/distributed_lab/kit/comfig",
     "gitlab.com/distributed_lab/kit/kv",
-    "gitlab.com/distributed_lab/kit/traefik",
     "gitlab.com/distributed_lab/logan/v3",
     "gitlab.com/distributed_lab/logan/v3/errors",
     "gitlab.com/tokend/go/amount",

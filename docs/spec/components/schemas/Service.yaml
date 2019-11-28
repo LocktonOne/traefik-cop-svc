@@ -10,6 +10,7 @@ allOf:
           - url
           - port
           - name
+          - rule
         properties:
           url:
             type: string
@@ -20,3 +21,6 @@ allOf:
           name:
             type: string
             example: example-service
+          rule:
+            type: string
+            example: Path(`/example`) || Path (`/example2`)

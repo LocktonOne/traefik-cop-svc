@@ -6,21 +6,22 @@ import (
 	"net/http"
 	"sync"
 
-	"gitlab.com/distributed_lab/kit/traefik"
+	"gitlab.com/tokend/traefik-cop/internal/data"
+
+	"gitlab.com/tokend/traefik-cop/traefik"
+
 	"gitlab.com/distributed_lab/logan/v3"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 	"gitlab.com/tokend/traefik-cop/internal/config"
 	traefik2 "gitlab.com/tokend/traefik-cop/internal/service/traefik"
 )
 
-type Updater func(backend traefik2.Backend) error
-
 type Service struct {
 	config   config.Config
 	listener net.Listener
 	log      *logan.Entry
 	traefik  *traefik.Traefik
-	updater  Updater
+	updater  data.Updater
 
 	*sync.RWMutex
 	backends map[string]traefik2.Backend

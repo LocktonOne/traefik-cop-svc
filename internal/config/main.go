@@ -3,7 +3,7 @@ package config
 import (
 	"gitlab.com/distributed_lab/kit/comfig"
 	"gitlab.com/distributed_lab/kit/kv"
-	"gitlab.com/distributed_lab/kit/traefik"
+	"gitlab.com/tokend/traefik-cop/traefik"
 )
 
 type Config interface {

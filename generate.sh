@@ -2,7 +2,7 @@
 
 GENERATOR_IMAGE=registry.gitlab.com/tokend/openapi-go-generator:cf7813ad75855d8057f5d45d8d12778de6fe1f28
 
-GENERATED="${GOPATH}/src/gitlab.com/tokend/traefik-cop/internal/resources"
+GENERATED="${GOPATH}/src/gitlab.com/tokend/traefik-cop/resources"
 OPENAPI_DIR="${GOPATH}/src/gitlab.com/tokend/traefik-cop/docs/web_deploy"
 PACKAGE_NAME=resources
 
