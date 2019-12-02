@@ -61,17 +61,17 @@ func (s *Service) Run(ctx context.Context) {
 }
 
 func (s *Service) register() error {
-	routers := make(map[string]*traefik.Router)
-	services := make(map[string]*traefik.Service)
+	routers := make(map[string]traefik.Router)
+	services := make(map[string]traefik.Service)
 
 	for name, backend := range s.backends {
-		routers[name] = &backend.Router
-		services[name] = &backend.Service
+		routers[name] = backend.Router
+		services[name] = backend.Service
 	}
 
 	err := s.traefik.RegisterConfiguration(
 		traefik.Configuration{
-			HTTP: &traefik.HTTPConfiguration{
+			HTTP: traefik.HTTPConfiguration{
 				Routers:  routers,
 				Services: services,
 			},

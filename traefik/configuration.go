@@ -1,16 +1,16 @@
 package traefik
 
 type Configuration struct {
-	HTTP *HTTPConfiguration `json:"http,omitempty"`
+	HTTP HTTPConfiguration `json:"http,omitempty"`
 }
 
 type HTTPConfiguration struct {
-	Routers  map[string]*Router  `json:"routers,omitempty" toml:"routers,omitempty" yaml:"routers,omitempty"`
-	Services map[string]*Service `json:"services,omitempty" toml:"services,omitempty" yaml:"services,omitempty"`
+	Routers  map[string]Router  `json:"routers,omitempty" toml:"routers,omitempty" yaml:"routers,omitempty"`
+	Services map[string]Service `json:"services,omitempty" toml:"services,omitempty" yaml:"services,omitempty"`
 }
 
 type Service struct {
-	LoadBalancer *ServersLoadBalancer `json:"loadBalancer,omitempty" toml:"loadBalancer,omitempty" yaml:"loadBalancer,omitempty"`
+	LoadBalancer ServersLoadBalancer `json:"loadBalancer,omitempty" toml:"loadBalancer,omitempty" yaml:"loadBalancer,omitempty"`
 }
 
 type Router struct {

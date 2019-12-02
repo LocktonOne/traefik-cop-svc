@@ -23,7 +23,7 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 			Rule:    request.Data.Attributes.Rule,
 		},
 		Service: traefik2.Service{
-			LoadBalancer: &traefik2.ServersLoadBalancer{
+			LoadBalancer: traefik2.ServersLoadBalancer{
 				Servers: []traefik2.Server{
 					traefik2.Server{
 						URL:    request.Data.Attributes.Url,
