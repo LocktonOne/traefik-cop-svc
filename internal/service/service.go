@@ -2,8 +2,10 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 
 	"gitlab.com/tokend/traefik-cop/internal/data"
@@ -90,6 +92,16 @@ func (s *Service) updateConfiguration(backend traefik2.Backend) {
 	for _, server := range existing.Service.LoadBalancer.Servers {
 		// server already registered
 		if server == backend.Service.LoadBalancer.Servers[0] {
+			// check and update rules
+			rules := strings.Split(backend.Router.Rule, "||")
+			for _, rule := range rules {
+				ok := strings.Contains(existing.Router.Rule, rule)
+				if ok {
+					continue
+				}
+				existing.Router.Rule = existing.Router.Rule + fmt.Sprintf("||%s", rule)
+			}
+			s.backends[backend.Router.Service] = existing
 			return
 		}
 	}
