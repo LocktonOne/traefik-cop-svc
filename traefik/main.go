@@ -8,10 +8,7 @@ import (
 )
 
 type TraefikConfig struct {
-	Endpoint    string `fig:"endpoint"`
-	Upstream    string `fig:"upstream"`
-	ServiceName string `fig:"service_name"`
-	ServicePort string `fig:"service_port"`
+	Endpoint string `fig:"endpoint"`
 }
 
 type Traefik struct {

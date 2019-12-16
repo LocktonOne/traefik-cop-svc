@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
-	"github.com/pkg/errors"
+	"gitlab.com/distributed_lab/logan/v3"
+	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 type Client struct {
@@ -31,15 +33,17 @@ func (c *Client) PutConfiguration(configuration Configuration) error {
 	}
 	defer response.Body.Close()
 
-	switch response.StatusCode {
-	case http.StatusOK, http.StatusCreated:
-		return nil
-	case http.StatusNotFound, http.StatusNoContent:
-		return nil
-	case http.StatusBadRequest:
-		return errors.New("invalid request")
-	default:
-		return errors.New(
-			"something bad happened")
+	respBB, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return errors.Wrap(err, "failed to read response body")
 	}
+
+	if response.StatusCode > 300 {
+		return errors.From(errors.New("failed to update configuration"),
+			logan.F{"status": response.StatusCode,
+				"body": string(respBB),
+			})
+	}
+
+	return nil
 }

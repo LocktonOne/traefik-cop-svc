@@ -17,7 +17,7 @@ func (s *Service) router() chi.Router {
 			handlers.CtxUpdater(s.updater)),
 	)
 
-	r.Route("/integrations/traefik", func(r chi.Router) {
+	r.Route("/cop", func(r chi.Router) {
 		r.Post("/services", handlers.AddService)
 	})
 
