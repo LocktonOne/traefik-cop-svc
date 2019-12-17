@@ -1,0 +1,9 @@
+
+apiTitle: traefik-cop
+splitSpec: true
+codeSamples: false
+swaggerUI: true
+travis: true
+repo: tokend/traefik-cop
+oasVersion: 1.0.0
+

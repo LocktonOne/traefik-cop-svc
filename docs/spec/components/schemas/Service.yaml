@@ -1,0 +1,26 @@
+allOf:
+  - $ref: '#/components/schemas/ServiceKey'
+  - type: object
+    required:
+      - attributes
+    properties:
+      attributes:
+        type: object
+        required:
+          - url
+          - port
+          - name
+          - rule
+        properties:
+          url:
+            type: string
+            example: 'http://example-service'
+          port:
+            type: string
+            example: 80
+          name:
+            type: string
+            example: example-service
+          rule:
+            type: string
+            example: Path(`/example`) || Path (`/example2`)
