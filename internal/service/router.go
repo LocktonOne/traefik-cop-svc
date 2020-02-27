@@ -20,6 +20,7 @@ func (s *Service) router() chi.Router {
 	r.Route("/cop", func(r chi.Router) {
 		r.Post("/services", handlers.AddService)
 	})
+	r.NotFound(handlers.JSONApiNotFoundRenderer)
 
 	return r
 }
