@@ -58,7 +58,7 @@ func (s *Service) Run(ctx context.Context) {
     err := s.updater(traefik2.Backend{
         Router: traefik.Router{
             Service: "cop",
-            Rule:    "(`PathPrefix:/`)",
+            Rule:    "PathPrefix(`/`)",
             Priority: 1,
         },
         Service: traefik.Service{
