@@ -7,5 +7,5 @@ import (
 )
 
 func JSONApiNotFoundRenderer(w http.ResponseWriter, r *http.Request) {
-
+    ape.RenderErr(w, problems.NotFound())
 }
