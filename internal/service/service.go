@@ -55,28 +55,8 @@ func (s *Service) Run(ctx context.Context) {
         return nil
     }
 
-    err := s.updater(traefik2.Backend{
-        Router: traefik.Router{
-            Service: "error-handler-svc",
-            Rule:    "PathPrefix(`/`)",
-            Priority: 1,
-        },
-        Service: traefik.Service{
-            LoadBalancer: traefik.ServersLoadBalancer{Servers: []traefik.Server{
-                {
-                    URL:    "http://errhandler",
-                    Scheme: "http",
-                    Port:   "80",
-                },
-            }},
-        },
-    })
-    if err != nil {
-    	panic(errors.Wrap(err, "failed to register cop in traefik"))
-	}
-
     // service's API
-    err = s.runService()
+    err := s.runService()
     if err != nil {
         panic(err)
     }
