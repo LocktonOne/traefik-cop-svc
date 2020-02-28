@@ -3,6 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/spf13/cast"
+
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 	"gitlab.com/tokend/traefik-cop/internal/service/requests"
@@ -19,8 +21,9 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 
 	err = Updater(r, traefik.Backend{
 		Router: traefik2.Router{
-			Service: request.Data.ID,
-			Rule:    request.Data.Attributes.Rule,
+			Service:  request.Data.ID,
+			Rule:     request.Data.Attributes.Rule,
+			Priority: safeInt(request.Data.Attributes.RulePriority),
 		},
 		Service: traefik2.Service{
 			LoadBalancer: traefik2.ServersLoadBalancer{
@@ -40,4 +43,11 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
+}
+
+func safeInt(iptr *int32) int {
+	if iptr == nil {
+		return 0
+	}
+	return cast.ToInt(*iptr)
 }
