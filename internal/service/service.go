@@ -57,14 +57,14 @@ func (s *Service) Run(ctx context.Context) {
 
     err := s.updater(traefik2.Backend{
         Router: traefik.Router{
-            Service: "cop",
+            Service: "error-handler-svc",
             Rule:    "PathPrefix(`/`)",
             Priority: 1,
         },
         Service: traefik.Service{
             LoadBalancer: traefik.ServersLoadBalancer{Servers: []traefik.Server{
                 {
-                    URL:    "http://cop",
+                    URL:    "http://errhandler",
                     Scheme: "http",
                     Port:   "80",
                 },
