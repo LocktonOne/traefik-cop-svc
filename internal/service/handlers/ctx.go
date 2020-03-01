@@ -16,7 +16,6 @@ type ctxKey int
 const (
 	logCtxKey ctxKey = iota
 	updaterCtxkey
-	traefikCfgCtxKey
 )
 
 func CtxLog(entry *logan.Entry) func(context.Context) context.Context {
