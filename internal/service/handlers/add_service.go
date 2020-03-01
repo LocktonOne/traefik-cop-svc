@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/spf13/cast"
-
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 	"gitlab.com/tokend/traefik-cop/internal/service/requests"
@@ -30,11 +28,9 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 			LoadBalancer: traefik2.ServersLoadBalancer{
 				Servers: []traefik2.Server{
 					{
-						URL:      request.Data.Attributes.Url,
-						Scheme:   "http",
-						Port:     request.Data.Attributes.Port,
-						Interval: durationWithFallback(request.Data.Attributes.HealthcheckInterval, TraefikCfg(r).GeneralHealthcheckInterval),
-						Timeout:  durationWithFallback(request.Data.Attributes.HealthcheckTimout, TraefikCfg(r).GeneralHealthcheckTimeout),
+						URL:    request.Data.Attributes.Url,
+						Scheme: "http",
+						Port:   request.Data.Attributes.Port,
 					},
 				},
 			},
@@ -53,18 +49,4 @@ func safeInt(iptr *int32) int {
 		return 0
 	}
 	return cast.ToInt(*iptr)
-}
-
-func durationWithFallback(value *string, fallbackValue time.Duration) time.Duration {
-	if value == nil {
-		return fallbackValue
-	}
-	d, err := time.ParseDuration(*value)
-	if err != nil {
-		return fallbackValue
-	}
-	if d == 0 {
-		return fallbackValue
-	}
-	return d
 }

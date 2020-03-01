@@ -5,8 +5,6 @@ traefik:
   endpoint: http://
   service_name: traefik-cop
   service_port: 80
-  general_healthcheck_timeout: 3s
-  general_healthcheck_interval: 10s
 
 listener:
   addr: :2323

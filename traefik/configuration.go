@@ -1,7 +1,5 @@
 package traefik
 
-import "time"
-
 type Configuration struct {
 	HTTP HTTPConfiguration `json:"http,omitempty"`
 }
@@ -26,9 +24,7 @@ type ServersLoadBalancer struct {
 }
 
 type Server struct {
-	URL      string        `json:"url,omitempty" toml:"url,omitempty" yaml:"url,omitempty" label:"-"`
-	Scheme   string        `toml:"-" json:"-" yaml:"-"`
-	Port     string        `toml:"-" json:"-" yaml:"-"`
-	Interval time.Duration `json:"interval,omitempty" toml:"interval,omitempty" yaml:"interval,omitempty" label:"-"`
-	Timeout  time.Duration `json:"timeout,omitempty" toml:"timeout,omitempty" yaml:"timeout,omitempty" label:"-"`
+	URL    string `json:"url,omitempty" toml:"url,omitempty" yaml:"url,omitempty" label:"-"`
+	Scheme string `toml:"-" json:"-" yaml:"-"`
+	Port   string `toml:"-" json:"-" yaml:"-"`
 }

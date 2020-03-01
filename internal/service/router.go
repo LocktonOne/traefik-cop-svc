@@ -15,7 +15,6 @@ func (s *Service) router() chi.Router {
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
 			handlers.CtxUpdater(s.updater),
-			handlers.CtxTraefikCfg(s.traefik.Cfg()),
 		),
 	)
 

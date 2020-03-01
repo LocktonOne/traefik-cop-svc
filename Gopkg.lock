@@ -288,7 +288,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/go-chi/chi",
-    "github.com/pkg/errors",
+    "github.com/spf13/cast",
     "github.com/urfave/cli",
     "gitlab.com/distributed_lab/ape",
     "gitlab.com/distributed_lab/ape/problems",

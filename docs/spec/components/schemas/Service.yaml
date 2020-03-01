@@ -18,14 +18,6 @@ allOf:
           port:
             type: string
             example: 80
-          healthcheck_timout:
-            type: string
-            default: "3s"
-            description: defines how much time Traefik will wait for the [200;300) answer from the server before deleting it from routing tables. Default value is 3s. This value cannot be updated
-          healthcheck_interval:
-            type: string
-            default: "10s"
-            description: defines how often Traefik should check service's health. Default value is 10s. This value cannot be updated
           name:
             type: string
             example: example-service

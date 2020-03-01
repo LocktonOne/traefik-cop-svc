@@ -4,8 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	traefik2 "gitlab.com/tokend/traefik-cop/traefik"
-
 	"gitlab.com/tokend/traefik-cop/internal/data"
 
 	"gitlab.com/tokend/traefik-cop/internal/service/traefik"
@@ -40,14 +38,4 @@ func CtxUpdater(updater data.Updater) func(context.Context) context.Context {
 func Updater(r *http.Request, backend traefik.Backend) error {
 	updater := r.Context().Value(updaterCtxkey).(data.Updater)
 	return updater(backend)
-}
-
-func CtxTraefikCfg(c *traefik2.TraefikConfig) func(context.Context) context.Context {
-	return func(ctx context.Context) context.Context {
-		return context.WithValue(ctx, traefikCfgCtxKey, c)
-	}
-}
-
-func TraefikCfg(r *http.Request) *traefik2.TraefikConfig {
-	return r.Context().Value(traefikCfgCtxKey).(*traefik2.TraefikConfig)
 }

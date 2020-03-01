@@ -41,7 +41,7 @@ func (j *traefiker) Traefik() *Traefik {
 		var config TraefikConfig
 
 		if err := figure.Out(&config).From(raw).Please(); err != nil {
-			panic(errors.Wrap(err, "failed to figure out janus"))
+			panic(errors.Wrap(err, "failed to figure out traefik"))
 		}
 
 		return New(config)

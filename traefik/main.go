@@ -2,16 +2,13 @@ package traefik
 
 import (
 	"io/ioutil"
-	"time"
 
 	"gitlab.com/distributed_lab/logan/v3"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 type TraefikConfig struct {
-	Endpoint                   string        `fig:"endpoint"`
-	GeneralHealthcheckTimeout  time.Duration `fig:"general_healthcheck_timeout"`
-	GeneralHealthcheckInterval time.Duration `fig:"general_healthcheck_interval"`
+	Endpoint string `fig:"endpoint"`
 }
 
 type Traefik struct {
@@ -35,10 +32,6 @@ func New(config TraefikConfig) *Traefik {
 			Endpoint: config.Endpoint,
 		},
 	}
-}
-
-func (c *Traefik) Cfg() *TraefikConfig {
-	return &c.config
 }
 
 func (t *Traefik) WithLog(log *logan.Entry) *Traefik {
