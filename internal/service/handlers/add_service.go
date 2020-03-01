@@ -33,8 +33,8 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 						URL:      request.Data.Attributes.Url,
 						Scheme:   "http",
 						Port:     request.Data.Attributes.Port,
-						Interval: durationWithFallback(request.Data.Attributes.HealthcheckInterval, 10*time.Second),
-						Timeout:  durationWithFallback(request.Data.Attributes.HealthcheckTimout, 3*time.Second),
+						Interval: durationWithFallback(request.Data.Attributes.HealthcheckInterval, TraefikCfg(r).GeneralHealthcheckInterval),
+						Timeout:  durationWithFallback(request.Data.Attributes.HealthcheckTimout, TraefikCfg(r).GeneralHealthcheckTimeout),
 					},
 				},
 			},
@@ -61,6 +61,9 @@ func durationWithFallback(value *string, fallbackValue time.Duration) time.Durat
 	}
 	d, err := time.ParseDuration(*value)
 	if err != nil {
+		return fallbackValue
+	}
+	if d == 0 {
 		return fallbackValue
 	}
 	return d
