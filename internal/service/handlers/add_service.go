@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/spf13/cast"
@@ -43,8 +42,6 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
-
-	fmt.Printf("====================== successfully added service %s to traefik", request.Data.ID)
 }
 
 func safeInt(iptr *int32) int {

@@ -42,19 +42,16 @@ func NewService(cfg config.Config) *Service {
 
 func (s *Service) Run(ctx context.Context) {
 	s.updater = func(backend traefik2.Backend) error {
-		fmt.Println("+++++++++++++++++ locking updater")
 		s.Lock()
 		defer s.Unlock()
 
 		s.updateConfiguration(backend)
-		fmt.Println("+++++++++++++++++ updated configuration")
 		//TODO send conf request
 		err := s.register()
 		if err != nil {
 			return errors.Wrap(err, "failed to register configuration")
 		}
 
-		fmt.Println("+++++++++++++++++ s.register() successful")
 		return nil
 	}
 
