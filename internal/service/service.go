@@ -46,12 +46,12 @@ func (s *Service) Run(ctx context.Context) {
 		defer s.Unlock()
 
 		s.updateConfiguration(backend)
-
 		//TODO send conf request
 		err := s.register()
 		if err != nil {
 			return errors.Wrap(err, "failed to register configuration")
 		}
+
 		return nil
 	}
 
@@ -100,6 +100,9 @@ func (s *Service) updateConfiguration(backend traefik2.Backend) {
 					continue
 				}
 				existing.Router.Rule = existing.Router.Rule + fmt.Sprintf("||%s", rule)
+				if backend.Router.Priority != 0 && len(backend.Router.Rule) > 0 {
+					existing.Router.Priority = len(backend.Router.Rule)
+				}
 			}
 			s.backends[backend.Router.Service] = existing
 			return

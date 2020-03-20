@@ -14,7 +14,8 @@ func (s *Service) router() chi.Router {
 		ape.LoganMiddleware(s.config.Log()),
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
-			handlers.CtxUpdater(s.updater)),
+			handlers.CtxUpdater(s.updater),
+		),
 	)
 
 	r.Route("/cop", func(r chi.Router) {

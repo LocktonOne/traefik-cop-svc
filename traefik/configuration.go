@@ -14,8 +14,9 @@ type Service struct {
 }
 
 type Router struct {
-	Service string `json:"service,omitempty" toml:"service,omitempty" yaml:"service,omitempty"`
-	Rule    string `json:"rule,omitempty" toml:"rule,omitempty" yaml:"rule,omitempty"`
+	Service  string `json:"service,omitempty" toml:"service,omitempty" yaml:"service,omitempty"`
+	Rule     string `json:"rule,omitempty" toml:"rule,omitempty" yaml:"rule,omitempty"`
+	Priority int    `json:"priority,omitempty" toml:"priority,omitempty" yaml:"priority,omitempty"`
 }
 
 type ServersLoadBalancer struct {

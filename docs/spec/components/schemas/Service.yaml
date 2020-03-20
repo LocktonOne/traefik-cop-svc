@@ -24,3 +24,7 @@ allOf:
           rule:
             type: string
             example: Path(`/example`) || Path (`/example2`)
+          rule_priority:
+            type: integer
+            example: 1
+            description: priority of the passed rule which will override default rule priority in Traefik. Default priority is len(rule).
