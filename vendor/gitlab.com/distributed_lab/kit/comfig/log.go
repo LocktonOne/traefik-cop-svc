@@ -1,11 +1,9 @@
 package comfig
 
 import (
-	"time"
-
-	"github.com/evalphobia/logrus_sentry"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	sentryhook "github.com/xr9kayu/logrus/sentry"
 	"gitlab.com/distributed_lab/figure"
 	"gitlab.com/distributed_lab/kit/kv"
 	"gitlab.com/distributed_lab/logan/v3"
@@ -42,20 +40,25 @@ func (l *logger) Log() *logan.Entry {
 		entry := logan.New().Level(config.Level)
 
 		if !config.DisableSentry {
-			sentry := NewSentrier(l.getter, SentryOpts{Release: l.options.Release}).Sentry()
+			sentrier := NewSentrier(l.getter, SentryOpts{Release: l.options.Release})
+			sentry := sentrier.Sentry()
+			sentryConfig := sentrier.SentryConfig()
 
-			// TODO set sentry level?
-			levels := []logrus.Level{
-				logrus.ErrorLevel,
-				logrus.FatalLevel,
-				logrus.PanicLevel,
+			var selectedLevel logrus.Level
+			if sentryConfig.Level != nil {
+				selectedLevel = logrus.Level(*sentryConfig.Level)
+			} else {
+				selectedLevel = logrus.Level(config.Level)
 			}
-
-			hook, err := logrus_sentry.NewWithClientSentryHook(sentry, levels)
+			levels := make([]logrus.Level, 0)
+			for level := logrus.PanicLevel; level <= selectedLevel; level++ {
+				levels = append(levels, level)
+			}
+			hook, err := sentryhook.NewHook(sentry, levels...)
 			if err != nil {
 				panic(errors.Wrap(err, "failed to init sentry hook"))
 			}
-			hook.Timeout = 1 * time.Second
+
 			entry.AddLogrusHook(hook)
 		}
 

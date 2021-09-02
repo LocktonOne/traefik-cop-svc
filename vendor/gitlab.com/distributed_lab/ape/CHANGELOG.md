@@ -1,6 +1,17 @@
 # Changelog
 
-## UNRELEASED
+## 1.5.0
+### Added
+- Added request ID setter and getter for default middleware
+
+## 1.4.0
+### Changed
+- lock raven to 0.2.0
+
+## 1.3.0
+### Added
+- urlval support
+
 ## 1.2.0
 ### Added
 - Serve with sane default timeouts & graceful shutdown

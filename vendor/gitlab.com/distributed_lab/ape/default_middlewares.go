@@ -17,8 +17,12 @@ func DefaultMiddlewares(r chi.Router, args ...interface{}) {
 	}
 
 	// push new args to front to ensure that override any existing
-	args = append([]interface{}{LoggerSetter(setContextLog), LoggerGetter(getContextLog)}, args...)
+	args = append([]interface{}{
+		LoggerSetter(setContextLog),
+		LoggerGetter(getContextLog),
+		RequestIDProvider(GetRequestID)}, args...)
 	r.Use(
+		CtxMiddleware(setRequestID),
 		// log middleware goes first, so subsequent entries will have request context
 		LoganMiddleware(log, args...),
 		RecoverMiddleware(args...),

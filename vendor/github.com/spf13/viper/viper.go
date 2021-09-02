@@ -3,7 +3,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file.
 
-// Viper is an application configuration system.
+// Viper is a application configuration system.
 // It believes that applications can be configured a variety of ways
 // via flags, ENVIRONMENT variables, configuration files retrieved
 // from the file system, or a remote key/value store.
@@ -45,7 +45,6 @@ import (
 	"github.com/spf13/cast"
 	jww "github.com/spf13/jwalterweatherman"
 	"github.com/spf13/pflag"
-	"github.com/subosito/gotenv"
 )
 
 // ConfigMarshalError happens when failing to marshal the configuration.
@@ -181,11 +180,10 @@ type Viper struct {
 	remoteProviders []*defaultRemoteProvider
 
 	// Name of file to look for inside the path
-	configName        string
-	configFile        string
-	configType        string
-	configPermissions os.FileMode
-	envPrefix         string
+	configName string
+	configFile string
+	configType string
+	envPrefix  string
 
 	automaticEnvApplied bool
 	envKeyReplacer      *strings.Replacer
@@ -212,7 +210,6 @@ func New() *Viper {
 	v := new(Viper)
 	v.keyDelim = "."
 	v.configName = "config"
-	v.configPermissions = os.FileMode(0644)
 	v.fs = afero.NewOsFs()
 	v.config = make(map[string]interface{})
 	v.override = make(map[string]interface{})
@@ -226,12 +223,12 @@ func New() *Viper {
 	return v
 }
 
-// Reset is intended for testing, will reset all to default settings.
+// Intended for testing, will reset all to default settings.
 // In the public interface for the viper package so applications
 // can use it in their testing as well.
 func Reset() {
 	v = New()
-	SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "dotenv", "env"}
+	SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl"}
 	SupportedRemoteProviders = []string{"etcd", "consul"}
 }
 
@@ -270,7 +267,7 @@ type RemoteProvider interface {
 }
 
 // SupportedExts are universally supported extensions.
-var SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "dotenv", "env"}
+var SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl"}
 
 // SupportedRemoteProviders are universally supported remote providers.
 var SupportedRemoteProviders = []string{"etcd", "consul"}
@@ -295,7 +292,6 @@ func (v *Viper) WatchConfig() {
 		filename, err := v.getConfigFile()
 		if err != nil {
 			log.Printf("error: %v\n", err)
-			initWG.Done()
 			return
 		}
 
@@ -345,7 +341,7 @@ func (v *Viper) WatchConfig() {
 			}
 		}()
 		watcher.Add(configDir)
-		initWG.Done()   // done initializing the watch in this go routine, so the parent routine can move on...
+		initWG.Done()   // done initalizing the watch in this go routine, so the parent routine can move on...
 		eventsWG.Wait() // now, wait for event loop to end in this go-routine...
 	}()
 	initWG.Wait() // make sure that the go routine above fully ended before returning
@@ -691,12 +687,6 @@ func (v *Viper) Get(key string) interface{} {
 			return cast.ToString(val)
 		case int32, int16, int8, int:
 			return cast.ToInt(val)
-		case uint:
-			return cast.ToUint(val)
-		case uint32:
-			return cast.ToUint32(val)
-		case uint64:
-			return cast.ToUint64(val)
 		case int64:
 			return cast.ToInt64(val)
 		case float64, float32:
@@ -707,8 +697,6 @@ func (v *Viper) Get(key string) interface{} {
 			return cast.ToDuration(val)
 		case []string:
 			return cast.ToStringSlice(val)
-		case []int:
-			return cast.ToIntSlice(val)
 		}
 	}
 
@@ -762,24 +750,6 @@ func (v *Viper) GetInt64(key string) int64 {
 	return cast.ToInt64(v.Get(key))
 }
 
-// GetUint returns the value associated with the key as an unsigned integer.
-func GetUint(key string) uint { return v.GetUint(key) }
-func (v *Viper) GetUint(key string) uint {
-	return cast.ToUint(v.Get(key))
-}
-
-// GetUint32 returns the value associated with the key as an unsigned integer.
-func GetUint32(key string) uint32 { return v.GetUint32(key) }
-func (v *Viper) GetUint32(key string) uint32 {
-	return cast.ToUint32(v.Get(key))
-}
-
-// GetUint64 returns the value associated with the key as an unsigned integer.
-func GetUint64(key string) uint64 { return v.GetUint64(key) }
-func (v *Viper) GetUint64(key string) uint64 {
-	return cast.ToUint64(v.Get(key))
-}
-
 // GetFloat64 returns the value associated with the key as a float64.
 func GetFloat64(key string) float64 { return v.GetFloat64(key) }
 func (v *Viper) GetFloat64(key string) float64 {
@@ -796,12 +766,6 @@ func (v *Viper) GetTime(key string) time.Time {
 func GetDuration(key string) time.Duration { return v.GetDuration(key) }
 func (v *Viper) GetDuration(key string) time.Duration {
 	return cast.ToDuration(v.Get(key))
-}
-
-// GetIntSlice returns the value associated with the key as a slice of int values.
-func GetIntSlice(key string) []int { return v.GetIntSlice(key) }
-func (v *Viper) GetIntSlice(key string) []int {
-	return cast.ToIntSlice(v.Get(key))
 }
 
 // GetStringSlice returns the value associated with the key as a slice of strings.
@@ -1022,11 +986,6 @@ func (v *Viper) find(lcaseKey string) interface{} {
 			s = strings.TrimSuffix(s, "]")
 			res, _ := readAsCSV(s)
 			return res
-		case "intSlice":
-			s := strings.TrimPrefix(flag.ValueString(), "[")
-			s = strings.TrimSuffix(s, "]")
-			res, _ := readAsCSV(s)
-			return cast.ToIntSlice(res)
 		default:
 			return flag.ValueString()
 		}
@@ -1096,11 +1055,6 @@ func (v *Viper) find(lcaseKey string) interface{} {
 			s = strings.TrimSuffix(s, "]")
 			res, _ := readAsCSV(s)
 			return res
-		case "intSlice":
-			s := strings.TrimPrefix(flag.ValueString(), "[")
-			s = strings.TrimSuffix(s, "]")
-			res, _ := readAsCSV(s)
-			return cast.ToIntSlice(res)
 		default:
 			return flag.ValueString()
 		}
@@ -1143,8 +1097,8 @@ func (v *Viper) SetEnvKeyReplacer(r *strings.Replacer) {
 	v.envKeyReplacer = r
 }
 
-// RegisterAlias creates an alias that provides another accessor for the same key.
-// This enables one to change a name without breaking the application.
+// Aliases provide another accessor for the same key.
+// This enables one to change a name without breaking the application
 func RegisterAlias(alias string, key string) { v.RegisterAlias(alias, key) }
 func (v *Viper) RegisterAlias(alias string, key string) {
 	v.registerAlias(alias, strings.ToLower(key))
@@ -1364,21 +1318,21 @@ func (v *Viper) writeConfig(filename string, force bool) error {
 	if v.config == nil {
 		v.config = make(map[string]interface{})
 	}
-	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	if !force {
-		flags |= os.O_EXCL
+	var flags int
+	if force == true {
+		flags = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	} else {
+		if _, err := os.Stat(filename); os.IsNotExist(err) {
+			flags = os.O_WRONLY
+		} else {
+			return fmt.Errorf("File: %s exists. Use WriteConfig to overwrite.", filename)
+		}
 	}
-	f, err := v.fs.OpenFile(filename, flags, v.configPermissions)
+	f, err := v.fs.OpenFile(filename, flags, os.FileMode(0644))
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-
-	if err := v.marshalWriter(f, configType); err != nil {
-		return err
-	}
-
-	return f.Sync()
+	return v.marshalWriter(f, configType)
 }
 
 // Unmarshal a Reader into a map.
@@ -1402,7 +1356,7 @@ func (v *Viper) unmarshalReader(in io.Reader, c map[string]interface{}) error {
 		}
 
 	case "hcl":
-		obj, err := hcl.Parse(buf.String())
+		obj, err := hcl.Parse(string(buf.Bytes()))
 		if err != nil {
 			return ConfigParseError{err}
 		}
@@ -1417,15 +1371,6 @@ func (v *Viper) unmarshalReader(in io.Reader, c map[string]interface{}) error {
 		}
 		tmap := tree.ToMap()
 		for k, v := range tmap {
-			c[k] = v
-		}
-
-	case "dotenv", "env":
-		env, err := gotenv.StrictParse(buf)
-		if err != nil {
-			return ConfigParseError{err}
-		}
-		for k, v := range env {
 			c[k] = v
 		}
 
@@ -1469,9 +1414,6 @@ func (v *Viper) marshalWriter(f afero.File, configType string) error {
 
 	case "hcl":
 		b, err := json.Marshal(c)
-		if err != nil {
-			return ConfigMarshalError{err}
-		}
 		ast, err := hcl.Parse(string(b))
 		if err != nil {
 			return ConfigMarshalError{err}
@@ -1494,18 +1436,6 @@ func (v *Viper) marshalWriter(f afero.File, configType string) error {
 		}
 		_, err := p.WriteComment(f, "#", properties.UTF8)
 		if err != nil {
-			return ConfigMarshalError{err}
-		}
-
-	case "dotenv", "env":
-		lines := []string{}
-		for _, key := range v.AllKeys() {
-			envName := strings.ToUpper(strings.Replace(key, ".", "_", -1))
-			val := v.Get(key)
-			lines = append(lines, fmt.Sprintf("%v=%v", envName, val))
-		}
-		s := strings.Join(lines, "\n")
-		if _, err := f.WriteString(s); err != nil {
 			return ConfigMarshalError{err}
 		}
 
@@ -1723,7 +1653,7 @@ func (v *Viper) AllKeys() []string {
 	m = v.flattenAndMergeMap(m, v.defaults, "")
 
 	// convert set of paths to list
-	a := make([]string, 0, len(m))
+	a := []string{}
 	for x := range m {
 		a = append(a, x)
 	}
@@ -1772,7 +1702,7 @@ func (v *Viper) flattenAndMergeMap(shadow map[string]bool, m map[string]interfac
 func (v *Viper) mergeFlatMap(shadow map[string]bool, m map[string]interface{}) map[string]bool {
 	// scan keys
 outer:
-	for k := range m {
+	for k, _ := range m {
 		path := strings.Split(k, v.keyDelim)
 		// scan intermediate paths
 		var parentKey string
@@ -1833,12 +1763,6 @@ func (v *Viper) SetConfigType(in string) {
 	if in != "" {
 		v.configType = in
 	}
-}
-
-// SetConfigPermissions sets the permissions for the config file.
-func SetConfigPermissions(perm os.FileMode) { v.SetConfigPermissions(perm) }
-func (v *Viper) SetConfigPermissions(perm os.FileMode) {
-	v.configPermissions = perm.Perm()
 }
 
 func (v *Viper) getConfigType() string {
