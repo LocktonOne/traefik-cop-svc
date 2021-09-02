@@ -2,9 +2,10 @@ log:
   disable_sentry: true
 
 traefik:
-  endpoint: http://
-  service_name: traefik-cop
-  service_port: 80
+  endpoints:
+    - http://localhost:8081
+    - http://localhost:8082
+    - http://localhost:8083
 
 listener:
   addr: :2323

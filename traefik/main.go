@@ -8,12 +8,12 @@ import (
 )
 
 type TraefikConfig struct {
-	Endpoint string `fig:"endpoint"`
+	Endpoints []string `fig:"endpoints"`
 }
 
 type Traefik struct {
 	disabled bool
-	client   Client
+	clients  []Client
 	config   TraefikConfig
 	log      *logan.Entry
 }
@@ -25,13 +25,18 @@ func NewNoOp() *Traefik {
 }
 
 func New(config TraefikConfig) *Traefik {
-	return &Traefik{
+	trfk := Traefik{
 		config: config,
 		log:    logan.New().Out(ioutil.Discard),
-		client: Client{
-			Endpoint: config.Endpoint,
-		},
 	}
+
+	for _, e := range config.Endpoints {
+		trfk.clients = append(trfk.clients, Client{
+			Endpoint: e,
+		})
+	}
+
+	return &trfk
 }
 
 func (t *Traefik) WithLog(log *logan.Entry) *Traefik {
@@ -44,9 +49,11 @@ func (t *Traefik) RegisterConfiguration(configuration Configuration) error {
 		return nil
 	}
 
-	err := t.client.PutConfiguration(configuration)
-	if err != nil {
-		return errors.Wrap(err, "failed to add configuration")
+	for _, c := range t.clients {
+		err := c.PutConfiguration(configuration)
+		if err != nil {
+			return errors.Wrap(err, "failed to add configuration")
+		}
 	}
 
 	return nil
