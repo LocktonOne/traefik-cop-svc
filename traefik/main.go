@@ -26,12 +26,12 @@ func NewNoOp() *Traefik {
 	}
 }
 
-func NewWithRestInit(config TraefikConfig) *Traefik {
+func NewWithRestInit(endpoints []string) *Traefik {
 	trfk := Traefik{
 		log: logan.New().Out(ioutil.Discard),
 	}
 
-	for _, e := range config.Endpoints {
+	for _, e := range endpoints {
 		trfk.clients = append(trfk.clients, &RestClient{
 			Endpoint: e,
 		})
@@ -40,13 +40,13 @@ func NewWithRestInit(config TraefikConfig) *Traefik {
 	return &trfk
 }
 
-func NewWithRedisInit(config TraefikConfig) *Traefik {
+func NewWithRedisInit(rc *redis.Client) *Traefik {
 	return &Traefik{
 		log: logan.New().Out(ioutil.Discard),
 		clients: []Client{
 			&RedisClient{
 				ctx: context.TODO(),
-				rc:  config.Redis,
+				rc:  rc,
 			},
 		},
 	}

@@ -57,9 +57,15 @@ func (j *traefiker) Traefik() *Traefik {
 
 		switch {
 		case probe.RedisDisabled:
-			return NewWithRestInit(config)
+			if len(config.Endpoints) == 0 {
+				panic("list of endpoints should be provided for traefik rest initialization")
+			}
+			return NewWithRestInit(config.Endpoints)
 		case probe.RestDisabled:
-			return NewWithRedisInit(config)
+			if config.Redis == nil {
+				panic("redis config should be provided for traefik redis initialization")
+			}
+			return NewWithRedisInit(config.Redis)
 		}
 
 		return NewNoOp()
