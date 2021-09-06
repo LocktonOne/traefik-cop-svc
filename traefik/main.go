@@ -1,20 +1,22 @@
 package traefik
 
 import (
+	"context"
 	"io/ioutil"
 
+	"github.com/go-redis/redis/v8"
 	"gitlab.com/distributed_lab/logan/v3"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 type TraefikConfig struct {
-	Endpoints []string `fig:"endpoints"`
+	Redis     *redis.Client `fig:"redis"`
+	Endpoints []string      `fig:"endpoints"`
 }
 
 type Traefik struct {
 	disabled bool
 	clients  []Client
-	config   TraefikConfig
 	log      *logan.Entry
 }
 
@@ -24,19 +26,30 @@ func NewNoOp() *Traefik {
 	}
 }
 
-func New(config TraefikConfig) *Traefik {
+func NewWithRestInit(config TraefikConfig) *Traefik {
 	trfk := Traefik{
-		config: config,
-		log:    logan.New().Out(ioutil.Discard),
+		log: logan.New().Out(ioutil.Discard),
 	}
 
 	for _, e := range config.Endpoints {
-		trfk.clients = append(trfk.clients, Client{
+		trfk.clients = append(trfk.clients, &RestClient{
 			Endpoint: e,
 		})
 	}
 
 	return &trfk
+}
+
+func NewWithRedisInit(config TraefikConfig) *Traefik {
+	return &Traefik{
+		log: logan.New().Out(ioutil.Discard),
+		clients: []Client{
+			&RedisClient{
+				ctx: context.TODO(),
+				rc:  config.Redis,
+			},
+		},
+	}
 }
 
 func (t *Traefik) WithLog(log *logan.Entry) *Traefik {

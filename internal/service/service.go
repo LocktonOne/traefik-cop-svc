@@ -8,14 +8,12 @@ import (
 	"strings"
 	"sync"
 
-	"gitlab.com/tokend/traefik-cop/internal/data"
-
-	"gitlab.com/tokend/traefik-cop/traefik"
-
 	"gitlab.com/distributed_lab/logan/v3"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 	"gitlab.com/tokend/traefik-cop/internal/config"
+	"gitlab.com/tokend/traefik-cop/internal/data"
 	traefik2 "gitlab.com/tokend/traefik-cop/internal/service/traefik"
+	"gitlab.com/tokend/traefik-cop/traefik"
 )
 
 type Service struct {
@@ -42,8 +40,13 @@ func NewService(cfg config.Config) *Service {
 
 func (s *Service) Run(ctx context.Context) {
 	s.updater = func(backend traefik2.Backend) error {
+		fmt.Println("locking updater")
 		s.Lock()
-		defer s.Unlock()
+		defer func() {
+			fmt.Println("unlocking updater")
+
+			s.Unlock()
+		}()
 
 		s.updateConfiguration(backend)
 		//TODO send conf request

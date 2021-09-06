@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0
+### Added
+- forbidden error handling for NotAllowed
+
 ## 1.5.0
 ### Added
 - Added request ID setter and getter for default middleware

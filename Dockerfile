@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.17
 
 WORKDIR /go/src/gitlab.com/tokend/traefik-cop
 COPY . .

@@ -22,6 +22,13 @@ func isNotAllowed(err error) bool {
 	return ok && e.NotAllowed()
 }
 
+func isForbidden(err error) bool {
+	e, ok := err.(interface {
+		Forbidden() bool
+	})
+	return ok && e.Forbidden()
+}
+
 // NotAllowed will try to guess details of error and populate problem accordingly.
 func NotAllowed(errs ...error) *jsonapi.ErrorObject {
 	// errs is optional for backward compatibility
@@ -52,6 +59,12 @@ func NotAllowed(errs ...error) *jsonapi.ErrorObject {
 			Title:  http.StatusText(http.StatusUnauthorized),
 			Status: fmt.Sprintf("%d", http.StatusUnauthorized),
 		}
+	case isForbidden(cause): {
+		return &jsonapi.ErrorObject{
+			Title:  http.StatusText(http.StatusForbidden),
+			Status: fmt.Sprintf("%d", http.StatusForbidden),
+		}
+	}
 	default:
 		return &jsonapi.ErrorObject{
 			Title:  http.StatusText(http.StatusInternalServerError),

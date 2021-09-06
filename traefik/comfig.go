@@ -1,6 +1,13 @@
 package traefik
 
 import (
+	"context"
+	"fmt"
+	"reflect"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/spf13/cast"
+
 	"gitlab.com/distributed_lab/figure"
 	"gitlab.com/distributed_lab/kit/comfig"
 	"gitlab.com/distributed_lab/kit/kv"
@@ -27,23 +34,78 @@ func (j *traefiker) Traefik() *Traefik {
 		raw := kv.MustGetStringMap(j.getter, "traefik")
 
 		var probe struct {
-			Disabled bool `fig:"disabled"`
+			RestDisabled  bool `fig:"rest_disabled"`
+			RedisDisabled bool `fig:"redis_disabled"`
 		}
 
 		if err := figure.Out(&probe).From(raw).Please(); err != nil {
 			panic(errors.Wrap(err, "failed to figure out traefik probe"))
 		}
 
-		if probe.Disabled {
+		if probe.RestDisabled && probe.RedisDisabled {
+			fmt.Println("all disabled, no-op")
 			return NewNoOp()
 		}
 
 		var config TraefikConfig
-
-		if err := figure.Out(&config).From(raw).Please(); err != nil {
-			panic(errors.Wrap(err, "failed to figure out traefik"))
+		fig := figure.Out(&config).From(raw)
+		if !probe.RedisDisabled { // doing this to keep configs 'disabled'-compatible
+			fig = fig.With(figure.BaseHooks, redisClientHooks)
 		}
 
-		return New(config)
+		if err := fig.Please(); err != nil {
+			return errors.Wrap(err, "failed to figure out traefik")
+		}
+
+		switch {
+		case probe.RedisDisabled:
+			fmt.Println("having rest init")
+
+			return NewWithRestInit(config)
+		case probe.RestDisabled:
+			fmt.Println("having redis init")
+
+			return NewWithRedisInit(config)
+		}
+
+		fmt.Println("all disabled, no-op")
+
+		return NewNoOp()
 	}).(*Traefik)
+}
+
+var redisClientHooks = figure.Hooks{
+	"*redis.Client": func(value interface{}) (reflect.Value, error) {
+		raw, err := cast.ToStringMapE(value)
+		if err != nil {
+			return reflect.Value{}, errors.Wrap(err, "failed to parse map[string]interface{}")
+		}
+
+		config := struct {
+			Addr     string `fig:"address"`
+			Password string `fig:"password"`
+			DB       int    `fig:"db"`
+		}{
+			Addr:     "127.0.0.1:6379",
+			Password: "",
+			DB:       0,
+		}
+
+		if err := figure.Out(&config).From(raw).Please(); err != nil {
+			panic(errors.Wrap(err, "failed to get data redis from config"))
+		}
+
+		clientRedis := redis.NewClient(&redis.Options{
+			Addr:     config.Addr,
+			Password: config.Password,
+			DB:       config.DB,
+		})
+
+		if err := clientRedis.Ping(context.TODO()).Err(); err != nil {
+			panic(errors.Wrap(err, "failed to connect to redis"))
+		}
+
+		return reflect.ValueOf(clientRedis), nil
+
+	},
 }
