@@ -9,9 +9,14 @@ import (
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
+type RedisConfig struct {
+	RootKey string        `fig:"rootkey"`
+	Redis   *redis.Client `fig:"client"`
+}
+
 type TraefikConfig struct {
-	Redis     *redis.Client `fig:"redis"`
-	Endpoints []string      `fig:"endpoints"`
+	Redis     *RedisConfig `fig:"redis"`
+	Endpoints []string     `fig:"endpoints"`
 }
 
 type Traefik struct {
@@ -40,13 +45,14 @@ func NewWithRestInit(endpoints []string) *Traefik {
 	return &trfk
 }
 
-func NewWithRedisInit(rc *redis.Client) *Traefik {
+func NewWithRedisInit(rootKey string, rc *redis.Client) *Traefik {
 	return &Traefik{
 		log: logan.New().Out(ioutil.Discard),
 		clients: []Client{
 			&RedisClient{
-				ctx: context.TODO(),
-				rc:  rc,
+				rootKey: rootKey,
+				ctx:     context.TODO(),
+				rc:      rc,
 			},
 		},
 	}

@@ -65,7 +65,7 @@ func (j *traefiker) Traefik() *Traefik {
 			if config.Redis == nil {
 				panic("redis config should be provided for traefik redis initialization")
 			}
-			return NewWithRedisInit(config.Redis)
+			return NewWithRedisInit(config.Redis.RootKey, config.Redis.Redis)
 		}
 
 		return NewNoOp()
@@ -73,7 +73,7 @@ func (j *traefiker) Traefik() *Traefik {
 }
 
 var redisClientHooks = figure.Hooks{
-	"*redis.Client": func(value interface{}) (reflect.Value, error) {
+	"*traefik.RedisConfig": func(value interface{}) (reflect.Value, error) {
 		raw, err := cast.ToStringMapE(value)
 		if err != nil {
 			return reflect.Value{}, errors.Wrap(err, "failed to parse map[string]interface{}")
@@ -83,10 +83,12 @@ var redisClientHooks = figure.Hooks{
 			Addr     string `fig:"address"`
 			Password string `fig:"password"`
 			DB       int    `fig:"db"`
+			RootKey  string `fig:"rootkey"`
 		}{
 			Addr:     "127.0.0.1:6379",
 			Password: "",
 			DB:       0,
+			RootKey:  "traefik",
 		}
 
 		if err := figure.Out(&config).From(raw).Please(); err != nil {
@@ -103,7 +105,9 @@ var redisClientHooks = figure.Hooks{
 			panic(errors.Wrap(err, "failed to connect to redis"))
 		}
 
-		return reflect.ValueOf(clientRedis), nil
-
+		return reflect.ValueOf(&RedisConfig{
+			RootKey: config.RootKey,
+			Redis:   clientRedis,
+		}), nil
 	},
 }

@@ -55,19 +55,20 @@ func (c *RestClient) PutConfiguration(configuration Configuration) error {
 }
 
 type RedisClient struct {
-	ctx context.Context
-	rc  *redis.Client
+	rootKey string
+	ctx     context.Context
+	rc      *redis.Client
 }
 
 func (c *RedisClient) PutConfiguration(configuration Configuration) error {
-	rawConfiguration := mergeDisjointMaps(craftRoutersMap(configuration), craftServersMap(configuration))
+	rawConfiguration := mergeDisjointMaps(craftRoutersMap(c.rootKey, configuration), craftServersMap(c.rootKey, configuration))
 	return c.rc.MSet(c.ctx, rawConfiguration).Err()
 }
 
-func craftServersMap(c Configuration) map[string]string {
+func craftServersMap(rootKey string, c Configuration) map[string]string {
 	servers := make(map[string]string)
 
-	base := "traefik/http/services"
+	base := fmt.Sprintf("%s/http/services", rootKey)
 	for serviceName, service := range c.HTTP.Services {
 		serversLoadBalancerServerBase := fmt.Sprintf("%s/%s/loadbalancer/servers", base, serviceName)
 		for i, server := range service.LoadBalancer.Servers {
@@ -79,11 +80,10 @@ func craftServersMap(c Configuration) map[string]string {
 	return servers
 }
 
-func craftRoutersMap(c Configuration) map[string]string {
+func craftRoutersMap(rootKey string, c Configuration) map[string]string {
 	routers := make(map[string]string)
 
-	base := "traefik/http/routers"
-
+	base := fmt.Sprintf("%s/http/routers", rootKey)
 	for routerName, router := range c.HTTP.Routers {
 		routerBase := fmt.Sprintf("%s/%s", base, routerName)
 
