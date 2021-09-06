@@ -40,13 +40,8 @@ func NewService(cfg config.Config) *Service {
 
 func (s *Service) Run(ctx context.Context) {
 	s.updater = func(backend traefik2.Backend) error {
-		fmt.Println("locking updater")
 		s.Lock()
-		defer func() {
-			fmt.Println("unlocking updater")
-
-			s.Unlock()
-		}()
+		defer s.Unlock()
 
 		s.updateConfiguration(backend)
 		//TODO send conf request

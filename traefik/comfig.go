@@ -2,7 +2,6 @@ package traefik
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 
 	"github.com/go-redis/redis/v8"
@@ -43,7 +42,6 @@ func (j *traefiker) Traefik() *Traefik {
 		}
 
 		if probe.RestDisabled && probe.RedisDisabled {
-			fmt.Println("all disabled, no-op")
 			return NewNoOp()
 		}
 
@@ -59,16 +57,10 @@ func (j *traefiker) Traefik() *Traefik {
 
 		switch {
 		case probe.RedisDisabled:
-			fmt.Println("having rest init")
-
 			return NewWithRestInit(config)
 		case probe.RestDisabled:
-			fmt.Println("having redis init")
-
 			return NewWithRedisInit(config)
 		}
-
-		fmt.Println("all disabled, no-op")
 
 		return NewNoOp()
 	}).(*Traefik)

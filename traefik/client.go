@@ -22,8 +22,6 @@ type RestClient struct {
 }
 
 func (c *RestClient) PutConfiguration(configuration Configuration) error {
-	fmt.Println("putting config by rest api")
-
 	url := fmt.Sprintf("%s/api/providers/rest", c.Endpoint)
 	var body bytes.Buffer
 	if err := json.NewEncoder(&body).Encode(&configuration); err != nil {
@@ -62,8 +60,6 @@ type RedisClient struct {
 }
 
 func (c *RedisClient) PutConfiguration(configuration Configuration) error {
-	fmt.Println("putting config to redis")
-
 	rawConfiguration := mergeDisjointMaps(craftRoutersMap(configuration), craftServersMap(configuration))
 	return c.rc.MSet(c.ctx, rawConfiguration).Err()
 }

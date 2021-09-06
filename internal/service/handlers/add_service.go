@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/spf13/cast"
@@ -18,9 +17,6 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
-
-	fmt.Println("adding service", request.Data.Attributes.Name)
-	fmt.Println("rule for service is", request.Data.Attributes.Rule)
 
 	err = Updater(r, traefik.Backend{
 		Router: traefik2.Router{
